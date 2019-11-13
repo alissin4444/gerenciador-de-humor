@@ -1,0 +1,19 @@
+{
+  "name": "gerenciador-de-humores",
+  "version": "1.0.0",
+  "description": "Esse projeto visa aprimorar meus conhecimentos acerca de sequelize e postgreSQL. Ele foi desenvolvido enquanto eu era integrante da empresa \"Zhealth Blockchain\" e precisava desenvolver projetos que utilizavam o ORM Sequelize e o banco de dados PostgreSQL",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  },
+  "author": "Alissin Santos",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^1.19.4",
+    "pg": "^7.12.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.2",
+    "sequelize-cli": "^5.5.1"
+  }
+}
