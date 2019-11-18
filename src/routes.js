@@ -2,10 +2,14 @@ const express = require("express");
 
 const AvatarController = require("./controllers/AvatarController");
 const HumorController = require("./controllers/HumorController");
+const IconController = require("./controllers/IconController");
+const CorController = require("./controllers/CorController");
+const TagController = require("./controllers/TagController");
+const RegisterController = require("./controllers/RegisterController");
 
 const routes = express.Router();
 
-routes.get("/", (req, res) => {
+routes.get("/", res => {
   res.json({ message: "You're welcome!" });
 });
 
@@ -23,11 +27,27 @@ routes.put("/humores/:id_humor", HumorController.updateHumor);
 routes.delete("/humores/:id_humor", HumorController.deleteHumor);
 // Criar uma rota que possibilita visualizar quantos registros estão relacionados à esse humor
 
-// Fazer o crud para icons
-// Fazer o crud para cores
+routes.post("/icons", IconController.store);
+routes.get("/icons", IconController.index);
+routes.get("/icons/:id_icon", IconController.indexIcon);
+routes.put("/icons/:id_icon", IconController.updateIcon);
+routes.delete("/icons/:id_icon", IconController.deleteIcon);
 
-// Fazer o crud para tags
-// Fazer o crud de registros
+routes.get("/cores", CorController.index);
+routes.get("/cores/:id_cor", CorController.indexCor);
+routes.post("/cores", CorController.store);
+routes.put("/cores/:id_cor", CorController.updateCor);
+routes.delete("/cores/:id_cor", CorController.deleteCor);
+
+routes.get("/tags", TagController.index);
+routes.post("/icons/:id/tags", TagController.store);
+routes.get("/tags/:id", TagController.show);
+routes.put("/tags/:id", TagController.update);
+routes.delete("/tags/:id", TagController.destroy);
+
+// routes.get('/humores/:id/registers', RegisterController.index);
+// routes.post('/humores/:id/registers', RegisterController.store);
+
 // Fazer o relacionamento entre registros e tags
 
 // Fazer o crud para comentários
