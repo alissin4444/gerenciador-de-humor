@@ -5,11 +5,19 @@ module.exports = {
   async store(req, res) {
     try {
       const { nome, id_avatar } = req.body;
+
+      const avatar = await Avatar.findByPk(id_avatar);
+
+      if (!avatar) {
+        return res.status(401).json({ error: "Avatar is not founded" });
+      }
+
       const humor = await Humor.findOrCreate({
         where: {
           id_avatar,
           nome
-        }
+        },
+        include: [{ model: Avatar, as: "avatar" }]
       });
       return res.status(200).json({ humor, responseValue: 1 });
     } catch (err) {

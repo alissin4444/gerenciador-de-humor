@@ -45,8 +45,8 @@ routes.get("/tags/:id", TagController.show);
 routes.put("/tags/:id", TagController.update);
 routes.delete("/tags/:id", TagController.destroy);
 
-// routes.get('/humores/:id/registers', RegisterController.index);
-// routes.post('/humores/:id/registers', RegisterController.store);
+routes.get("/registers", RegisterController.index);
+routes.post("/humores/:id/registers", RegisterController.store);
 
 // Fazer o relacionamento entre registros e tags
 

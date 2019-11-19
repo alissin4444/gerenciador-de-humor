@@ -14,9 +14,9 @@ class Tag extends Model {
   }
   static associate(models) {
     this.belongsTo(models.Icon, { foreignKey: "id_icon", as: "icon" });
-    this.belongsToMany(models.Tag, {
+    this.belongsToMany(models.Register, {
       foreignKey: "id_tag",
-      throught: "registers_tags",
+      through: "registers_tags",
       as: "registers"
     });
   }
