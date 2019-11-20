@@ -1,89 +1,103 @@
-const Tag = require("../models/Tag");
-const Icon = require("../models/Icon");
+const Register = require("../models/Register");
+const Humor = require("../models/Humor");
+const Cor = require("../models/Cor");
+const Avatar = require("../models/Avatar");
+
+const { Op } = require("sequelize");
 
 module.exports = {
   async index(req, res) {
     try {
-      const tag = await Tag.findAll({
-        include: [
-          {
-            model: Icon,
-            as: "icon"
-          }
-        ]
-      });
-      return res.json(tag);
-    } catch (error) {
-      return res.status().json(error);
-    }
-  },
-
-  async store(req, res) {
-    try {
       const { id } = req.params;
-      const { nome } = req.body;
-      const tag = await Tag.findOrCreate({
-        where: {
-          nome,
-          id_icon: id
-        }
+
+      const register = await Register.findByPk(id);
+
+      if (!register) {
+        return res.status(404).json({ message: "Register is not found" });
+      }
+
+      let tags = register.tags;
+
+      tags = tags.split(",");
+      const data_tags = [];
+
+      tags.map(tag => {
+        data_tags.push(tag.trim());
       });
-      return res.json(tag);
+
+      return res.json(data_tags);
     } catch (error) {
-      return res.status(400).json(error);
+      console.log(error);
+      res.status(400).json(error);
     }
   },
 
   async show(req, res) {
     try {
-      const { id } = req.params;
-      const tag = await Tag.findAll({
+      const { tag } = req.body;
+
+      const tags = await Register.findAll({
         where: {
-          id
+          tags: {
+            [Op.like]: `%${tag}%`
+          }
         },
         include: [
           {
-            model: Icon,
-            as: "icon"
+            model: Cor,
+            as: "cor",
+            attributes: ["nome", "cor"]
+          },
+          {
+            model: Humor,
+            as: "humor",
+            attributes: ["id_avatar", "nome"],
+            include: [{ model: Avatar, as: "avatar", attributes: ["nome"] }]
           }
         ]
       });
-      return res.json(tag);
-    } catch (error) {
-      return res.status(400).json(error);
-    }
-  },
 
-  async update(req, res) {
-    try {
-      const { id } = req.params;
-      const { nome, id_icon } = req.body;
-
-      const tag = await Tag.findByPk(id);
-
-      if (tag !== null) {
-        tag.nome = nome;
-        tag.id_icon = id_icon;
-        tag.save();
-        res.json(tag);
+      if (!tags) {
+        return res.status(404).json({ message: "Tag is not found" });
       }
 
-      res.status(404).json({ message: "Tag não encontrada" });
+      return res.json(tags);
     } catch (error) {
-      return res.status(400).json(error);
+      console.log(error);
+      res.status(400).json(error);
     }
   },
 
-  async destroy(req, res) {
+  async show_humores(req, res) {
     try {
       const { id } = req.params;
-      await Tag.destroy({
+      const { tag } = req.body;
+
+      const tags = await Register.findAll({
         where: {
-          id
-        }
+          tags: {
+            [Op.like]: `%${tag}%`
+          },
+          id_humor: id
+        },
+        include: [
+          {
+            model: Cor,
+            as: "cor",
+            attributes: ["nome", "cor"]
+          },
+          {
+            model: Humor,
+            as: "humor",
+            attributes: ["id_avatar", "nome"],
+            include: [{ model: Avatar, as: "avatar", attributes: ["nome"] }]
+          }
+        ]
       });
 
-      return res.json({ message: "Tag apagada com sucesso" });
-    } catch (error) {}
+      return res.json(tags);
+    } catch (error) {
+      res.status(400).json(error);
+    }
   }
 };

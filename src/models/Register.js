@@ -4,20 +4,17 @@ class Register extends Model {
   static init(sequelize) {
     super.init(
       {
-        dados: DataTypes.TEXT
+        dados: DataTypes.TEXT,
+        tags: DataTypes.STRING
       },
       {
-        sequelize
+        sequelize,
+        tableName: "registries"
       }
     );
   }
 
   static associate(models) {
-    this.belongsToMany(models.Tag, {
-      foreignKey: "id_register",
-      through: "registers_tags",
-      as: "tags"
-    });
     this.belongsTo(models.Humor, { foreignKey: "id_humor", as: "humor" });
     this.belongsTo(models.Cor, { foreignKey: "id_cor", as: "cor" });
   }

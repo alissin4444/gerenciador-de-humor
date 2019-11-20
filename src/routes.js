@@ -4,8 +4,9 @@ const AvatarController = require("./controllers/AvatarController");
 const HumorController = require("./controllers/HumorController");
 const IconController = require("./controllers/IconController");
 const CorController = require("./controllers/CorController");
-const TagController = require("./controllers/TagController");
 const RegisterController = require("./controllers/RegisterController");
+const TagController = require("./controllers/TagController");
+const FilterController = require("./controllers/FilterController");
 
 const routes = express.Router();
 
@@ -39,26 +40,28 @@ routes.post("/cores", CorController.store);
 routes.put("/cores/:id_cor", CorController.updateCor);
 routes.delete("/cores/:id_cor", CorController.deleteCor);
 
-routes.get("/tags", TagController.index);
-routes.post("/icons/:id/tags", TagController.store);
-routes.get("/tags/:id", TagController.show);
-routes.put("/tags/:id", TagController.update);
-routes.delete("/tags/:id", TagController.destroy);
+routes.get("/registries", RegisterController.index);
+routes.post("/humores/:id/registries", RegisterController.store);
+routes.get("/registries/:id", RegisterController.show);
+routes.put("/registries/:id", RegisterController.update);
+routes.delete("/registries/:id", RegisterController.destroy);
 
-routes.get("/registers", RegisterController.index);
-routes.post("/humores/:id/registers", RegisterController.store);
+routes.get("/registries/:id/tags", TagController.index);
+routes.get("/tags", TagController.show);
+routes.get("/humores/:id/registries/tags", TagController.show_humores);
 
-// Fazer o relacionamento entre registros e tags
+// All registries where humor x and tag y
 
 // Fazer o crud para comentários
 // Fazer o post para "reações"
 
 // Fazer uma função que possibilita filtrar os registros pelo humor
 // Fazer uma função que possibilita filtrar os registros pela cor
-// Fazer uma função que mostra quantos registros o sistema tem no total
+// Fazer uma função que permite filtrar os registros por suas tags
 // Fazer uma função que possibilita a visualização de quantos humores foram cadastrados e quantos registros cada humor possúi
+
 // Fazer uma função que diz qual a média aritmética (registros) de humores de usuários
 
-// Fluxo atual --> Entro no software, crio um humor, crio minhas tags, adiciono o registro, preencheencho o registro (tags, humor, cor e o contuúdo do registro), dou quantos likes quiser e ficará registrados esses likes, adiciono quantos comentários quiser e ficará registrado esses comentários
+// Fluxo atual --> Entro no software, crio um humor, adiciono o registro, preencheencho o registro (tags, humor, cor e o conteúdo do registro), dou quantos likes quiser e ficará registrados esses likes, adiciono quantos comentários quiser e ficará registrado esses comentários
 // GG project and upload at github.com
 module.exports = routes;

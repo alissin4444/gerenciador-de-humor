@@ -1,67 +1,136 @@
 const Register = require("../models/Register");
 const Cor = require("../models/Cor");
 const Humor = require("../models/Humor");
-const Tag = require("../models/Tag");
+const Avatar = require("../models/Avatar");
 
 module.exports = {
   async index(req, res) {
     try {
-      const registers = await Register.findAll({
+      const registries = await Register.findAndCountAll({
         include: [
           {
             model: Cor,
-            as: "cor"
+            as: "cor",
+            attributes: ["nome", "cor"]
           },
           {
             model: Humor,
-            as: "humor"
-          },
-          {
-            model: Tag,
-            as: "tags"
+            as: "humor",
+            attributes: ["id_avatar", "nome"],
+            include: [{ model: Avatar, as: "avatar", attributes: ["nome"] }]
           }
         ]
       });
-      return res.status(200).json({ registers });
-    } catch (err) {
-      console.log(err);
-      return res.status(400).json({ erro: err, responseValue: 0 });
+
+      return res.json(registries);
+    } catch (error) {
+      return res.status(400).json(error);
     }
   },
 
   async store(req, res) {
     try {
-      // id do Humor
       const { id } = req.params;
-      const { id_cor, id_tag, dados } = req.body;
+      const { dados, tags, id_cor } = req.body;
+
+      const humor = await Humor.findByPk(id);
+      if (!humor) {
+        return res.status(404).json({ message: "Humor is not founded" });
+      }
 
       const cor = await Cor.findByPk(id_cor);
-      const humor = await Humor.findByPk(id);
-      const tag = await Tag.findByPk(id_tag);
-
       if (!cor) {
-        return res.status(404).json({ error: "Color isn't founded" });
-      }
-
-      if (!humor) {
-        return res.status(404).json({ error: "Humor isn't founded" });
-      }
-
-      if (!tag) {
-        return res.status(404).json({ error: "Tag isn't founded" });
+        return res.status(404).json({ message: "Cor is not founded" });
       }
 
       const register = await Register.create({
-        id_humor: id,
         id_cor,
-        dados
+        id_humor: id,
+        dados,
+        tags
       });
-
-      await tag.addRegister(register);
 
       return res.json(register);
     } catch (error) {
-      console.log(error);
+      return res.status(400).json(error);
+    }
+  },
+
+  async show(req, res) {
+    try {
+      const { id } = req.params;
+
+      const register = await Register.findByPk(id, {
+        include: [
+          {
+            model: Cor,
+            as: "cor",
+            attributes: ["nome", "cor"]
+          },
+          {
+            model: Humor,
+            as: "humor",
+            attributes: ["id_avatar", "nome"],
+            include: [{ model: Avatar, as: "avatar", attributes: ["nome"] }]
+          }
+        ]
+      });
+
+      return res.json(register);
+    } catch (error) {
+      return res.status(400).json(error);
+    }
+  },
+
+  async update(req, res) {
+    try {
+      const { id } = req.params;
+      const { id_humor, id_cor, dados, tags } = req.body;
+
+      const register = await Register.findByPk(id);
+      if (!register) {
+        return res.status(404).json({ message: "Register is not found" });
+      }
+
+      const humor = await Humor.findByPk(id_humor);
+      if (!humor) {
+        return res.status(404).json({ message: "Humor is not found" });
+      }
+
+      const cor = await Cor.findByPk(id_cor);
+      if (!cor) {
+        return res.status(404).json({ message: "Cor is not found" });
+      }
+
+      register.id_humor = id_humor;
+      register.id_cor = id_cor;
+      register.dados = dados;
+      register.tags = tags;
+      register.save();
+
+      return res.json(register);
+    } catch (error) {
+      return res.status(400).json(error);
+    }
+  },
+
+  async destroy(req, res) {
+    try {
+      const { id } = req.params;
+      await Register.destroy({
+        where: {
+          id
+        }
+      });
+
+      const register = await Register.findByPk(id);
+
+      if (register) {
+        return res.json(false);
+      }
+
+      return res.json(true);
+    } catch (error) {
       return res.status(400).json(error);
     }
   }
