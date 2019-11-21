@@ -13,6 +13,10 @@ class Cor extends Model {
       }
     );
   }
+
+  static associate(models) {
+    this.hasMany(models.Register, { foreignKey: "id_cor", as: "registries" });
+  }
 }
 
 module.exports = Cor;

@@ -14,6 +14,7 @@ class Humor extends Model {
   }
   static associate(models) {
     this.belongsTo(models.Avatar, { foreignKey: "id_avatar", as: "avatar" });
+    this.hasMany(models.Register, { foreignKey: "id_humor", as: "registries" });
   }
 }
 

@@ -17,5 +17,6 @@ Register.init(connection);
 
 Humor.associate(connection.models);
 Register.associate(connection.models);
+Cor.associate(connection.models);
 
 module.exports = connection;
