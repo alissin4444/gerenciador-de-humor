@@ -61,23 +61,25 @@ module.exports = {
       const { id } = req.params;
 
       const register = await Register.findByPk(id, {
+        attributes: ['id', 'dados', 'tags', 'created_at'],
         include: [
           {
             model: Cor,
             as: "cor",
-            attributes: ["nome", "cor"]
+            attributes: ['id', "nome", "cor"]
           },
           {
             model: Humor,
             as: "humor",
-            attributes: ["id_avatar", "nome"],
-            include: [{ model: Avatar, as: "avatar", attributes: ["nome"] }]
+            attributes: ['id', "nome"],
+            include: [{ model: Avatar, as: "avatar", attributes: ['id',"nome"] }]
           }
         ]
       });
 
       return res.json(register);
     } catch (error) {
+      console.log(error)
       return res.status(400).json(error);
     }
   },

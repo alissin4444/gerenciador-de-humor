@@ -2,11 +2,11 @@ const express = require("express");
 
 const AvatarController = require("./controllers/AvatarController");
 const HumorController = require("./controllers/HumorController");
-const IconController = require("./controllers/IconController");
 const CorController = require("./controllers/CorController");
 const RegisterController = require("./controllers/RegisterController");
 const TagController = require("./controllers/TagController");
 const FilterController = require("./controllers/FilterController");
+const PorcentageController = require("./controllers/PorcentageController");
 
 const routes = express.Router();
 
@@ -26,17 +26,12 @@ routes.get("/humores/:id_humor", HumorController.indexHumor);
 routes.put("/humores/:id_humor", HumorController.updateHumor);
 routes.delete("/humores/:id_humor", HumorController.deleteHumor);
 
-routes.post("/icons", IconController.store);
-routes.get("/icons", IconController.index);
-routes.get("/icons/:id_icon", IconController.indexIcon);
-routes.put("/icons/:id_icon", IconController.updateIcon);
-routes.delete("/icons/:id_icon", IconController.deleteIcon);
-
 routes.get("/cores", CorController.index);
 routes.get("/cores/:id_cor", CorController.indexCor);
 routes.post("/cores", CorController.store);
 routes.put("/cores/:id_cor", CorController.updateCor);
 routes.delete("/cores/:id_cor", CorController.deleteCor);
+
 routes.get("/registries", RegisterController.index);
 routes.post("/humores/:id/registries", RegisterController.store);
 routes.get("/registries/:id", RegisterController.show);
@@ -47,16 +42,10 @@ routes.get("/registries/:id/tags", TagController.index);
 routes.get("/tags", TagController.show);
 routes.get("/humores/:id/registries/tags", TagController.show_humores);
 
-// Fazer o crud para comentários
-// Fazer o post para "reações"
-
 routes.get("/filter/humores/:id/registries", FilterController.humores);
 routes.get("/filter/cores/:id/registries", FilterController.cores);
-routes.get("/filter/humores/registries", FilterController.humores_registries); // Trazer todos os humores e seus registros com todos seus valores e um count de quantos registros esse humor possui
+routes.get("/filter/humores/registries", FilterController.humores_registries);
 
-// Aqui abaixo eu preciso buscar todos os registros. Aí para cada humor, eu vou juntar todos os registros com este humor e dividi-lo pela quantidade total de registros. Isso para todos os humores. Aí eu vou enviar para o front um "index" contendo todos os humores e suas porcentagens;
-// Fazer uma função que diz qual a média aritmética (registros) de humores de usuários
+routes.get("/porcentage", PorcentageController.index);
 
-// Fluxo atual --> Entro no software, crio um humor, adiciono o registro, preencheencho o registro (tags, humor, cor e o conteúdo do registro), dou quantos likes quiser e ficará registrados esses likes, adiciono quantos comentários quiser e ficará registrado esses comentários no registro. Além disso, posso filtrar os registros de algumas maneiras pré-definidas. (cor, tag, humor, etc)
-// GG project and upload at github.com
 module.exports = routes;
